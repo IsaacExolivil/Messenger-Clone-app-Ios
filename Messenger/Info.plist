@@ -58,5 +58,9 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Acepte para tomar fotos para su perfil de fb</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Permita acceder a tu bliblioteca de fotos </string>
 </dict>
 </plist>
