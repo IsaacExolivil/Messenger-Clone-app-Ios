@@ -204,21 +204,40 @@ class RegisterViewController: UIViewController {
             alertUserLoginError()
             return
         }
-        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: pasword, completion: { authResult, error in
-            guard let result = authResult, error == nil else {
+        // Firebase Register
+        DatabaseManager.shared.userExists(with: email, completion: { [weak self] exists in
+            guard let strongSelf = self else {
+                
+                return
+            }
+            
+            guard !exists else {
+                strongSelf.alertUserLoginError(message: "Parece que ya existe una cuenta con ese correo electronico")
+                return
+            }
+            
+       
+        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: pasword, completion: {  authResult, error in
+           
+            
+            guard  authResult != nil, error == nil else {
                 print ("Ocurrio un error")
                 return
             }
             
-            let user = result.user
-            print("se creo un usuario: \(user)")
+            DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
+                                                                lastName: lastName,
+                                                                emailAdress: email))
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            
         })
+    })
         
     }
     
-    func alertUserLoginError() {
+    func alertUserLoginError(message: String = "Por favor ponga toda la información para crear la nueva cuenta") {
         let alert = UIAlertController(title: "Opsss",
-                                      message: "Por favor ponga toda la información para crear la nueva cuenta",
+                                      message: message,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss",
                                       style: .cancel,
